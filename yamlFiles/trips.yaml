@@ -29,6 +29,14 @@ spec:
         env:
         - name: trips
           value: "trips"
+        - name: "SQL_SERVER"
+          value: "sqlserverlzn7863.database.windows.net"
+        - name: "SQL_USER"
+          value: "sqladminlZn7863"
+        - name: "SQL_PASSWORD"
+          value: "eB8hv3Ke5"
+        - name: "SQL_DBNAME"
+          value: "mydrivingDB"
 ---
 apiVersion: v1
 kind: Service
