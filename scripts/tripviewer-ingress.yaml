@@ -1,12 +1,12 @@
 apiVersion: extensions/v1beta1
 kind: Ingress
 metadata:
-  name: hello-world-ingress
-  namespace: web-dev
+  name: tripviewer-ingress
+  namespace: ingress-nginx
   annotations:
     kubernetes.io/ingress.class: nginx
     nginx.ingress.kubernetes.io/ssl-redirect: "false"
-    nginx.ingress.kubernetes.io/rewrite-target: /$1
+    nginx.ingress.kubernetes.io/rewrite-target: /$2
 spec:
   rules:
   - http:
@@ -14,4 +14,9 @@ spec:
       - backend:
           serviceName: tripviewer
           servicePort: 80
-        path: /(.*)    
+        path: /(.*)
+      - backend:
+          serviceName: userprofile
+          servicePort: 80
+        path: /userprofile(/|$)(.*)
+---
