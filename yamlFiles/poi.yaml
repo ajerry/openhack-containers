@@ -1,23 +1,23 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: trips
-  namespace: api-dev  
+  name: poi
+  namespace: api-dev    
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: trips
+      app: poi
   template:
     metadata:
       labels:
-        app: trips
+        app: poi
     spec:
       nodeSelector:
         "beta.kubernetes.io/os": linux
       containers:
-      - name: trips
-        image: registrylzn7863.azurecr.io/trips:1.0
+      - name: poi
+        image: registrylzn7863.azurecr.io/poi:1.0
         resources:
           requests:
             cpu: 100m
@@ -28,25 +28,23 @@ spec:
         ports:
         - containerPort: 80
         env:
-        - name: trips
-          value: "trips"
-        - name: "SQL_SERVER"
-          value: "sqlserverlzn7863.database.windows.net"
-        - name: "SQL_USER"
-          value: "sqladminlZn7863"
-        - name: "SQL_PASSWORD"
+        - name: poi
+          value: "poi"
+        - name: SQL_PASSWORD
           value: "eB8hv3Ke5"
-        - name: "SQL_DBNAME"
-          value: "mydrivingDB"
+        - name: SQL_USER
+          value: "sqladminlZn7863"
+        - name: SQL_SERVER
+          value: "sqlserverlzn7863.database.windows.net"
 ---
 apiVersion: v1
 kind: Service
 metadata:
-  name: trips
+  name: poi
   namespace: api-dev  
 spec:
   type: LoadBalancer
   ports:
   - port: 80
   selector:
-    app: trips
+    app: poi
