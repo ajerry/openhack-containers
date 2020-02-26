@@ -1,23 +1,24 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: tripviewer
-  namespace: web-dev  
+  name: userprofile
+  namespace: api-dev  
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: tripviewer
+      app: userprofile
   template:
     metadata:
       labels:
-        app: tripviewer
+        app: userprofile
     spec:
       nodeSelector:
         "beta.kubernetes.io/os": linux
       containers:
-      - name: tripviewer
-        image: registrylzn7863.azurecr.io/tripviewer:1.0
+      - name: userprofile
+        image: registrylzn7863.azurecr.io/userprofile:1.0
+  
         resources:
           requests:
             cpu: 100m
@@ -28,21 +29,23 @@ spec:
         ports:
         - containerPort: 80
         env:
-        - name: tripviewer
-          value: "tripviewer"
-        - name: USERPROFILE_API_ENDPOINT
-          value: "http://userprofile.api-dev:80"
-        - name: TRIPS_API_ENDPOINT
-          value: "http://trips.api-dev:80"
+          - name: SQL_SERVER
+            value: "sqlserverlzn7863.database.windows.net"
+          - name: SQL_PASSWORD
+            value: "eB8hv3Ke5"
+          - name: SQL_DBNAME
+            value: "mydrivingDB"
+          - name: SQL_USER
+            value: "sqladminlZn7863"
 ---
 apiVersion: v1
 kind: Service
 metadata:
-  name: tripviewer
-  namespace: web-dev  
+  name: userprofile
+  namespace: api-dev  
 spec:
   type: LoadBalancer
   ports:
   - port: 80
   selector:
-    app: tripviewer
+    app: userprofile
