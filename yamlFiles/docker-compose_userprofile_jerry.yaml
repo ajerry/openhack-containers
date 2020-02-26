@@ -17,7 +17,10 @@ spec:
       containers:
       - name: userprofile
         image: registrylzn7863.azurecr.io/userprofile:1.0
-  
+        volumeMounts:
+        - name: openhackflexv 
+          mountPath: /secrets
+          readOnly: true
         resources:
           requests:
             cpu: 100m
@@ -27,15 +30,20 @@ spec:
             memory: 256Mi
         ports:
         - containerPort: 80
-        env:
-          - name: SQL_SERVER
-            value: "sqlserverlzn7863.database.windows.net"
-          - name: SQL_PASSWORD
-            value: "eB8hv3Ke5"
-          - name: SQL_DBNAME
-            value: "mydrivingDB"
-          - name: SQL_USER
-            value: "sqladminlZn7863"
+      volumes:
+      - name: openhackflexv 
+        flexVolume:
+          driver: "azure/kv"
+          options:
+            usevmmanagedidentity: "true"             # [OPTIONAL new in version >= v0.0.15] if not provided, will default to "false"
+            vmmanagedidentityclientid: "14154b94-f97d-4ef2-af90-125a3a70dd85"     # [OPTIONAL new in version >= v0.0.15] use the client id to specify which user assigned managed identity to use, leave empty to use system assigned managed identity
+            keyvaultname: "openhack2021vault"              # [REQUIRED] the name of the KeyVault
+            keyvaultobjectnames: "sqlpassword;sqluser;sqldbname;sqlserver"         # [REQUIRED] list of KeyVault object names (semi-colon separated)
+            keyvaultobjecttypes: "secret;secret;secret;secret"              # [REQUIRED] list of KeyVault object types: secret, key, cert (semi-colon separated)
+            keyvaultobjectaliases: "SQL_PASSWORD;SQL_USER;SQL_DBNAME;SQL_SERVER"
+            resourcegroup: "teamResources"        # [REQUIRED for version < v0.0.14] the resource group of the KeyVault
+            subscriptionid: "0f06b719-cd36-45e8-823a-5cc0b8c684dd"                 # [REQUIRED for version < v0.0.14] the subscription ID of the KeyVault
+            tenantid: "4464f75f-6a86-41bb-80c4-e22c15203e2a"                    # [REQUIRED] the tenant ID of the KeyVault
 ---
 apiVersion: v1
 kind: Service
