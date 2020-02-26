@@ -1,0 +1,48 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: openhack-user-java
+  namespace: api-dev  
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: openhack-user-java
+  template:
+    metadata:
+      labels:
+        app: openhack-user-java
+    spec:
+      nodeSelector:
+        "beta.kubernetes.io/os": linux
+      containers:
+      - name: openhack-user-java
+        image: registrylzn7863.azurecr.io/user-java:1.0
+        env:
+        - name: SQL_USER
+          value: sqladminlZn7863
+        - name: SQL_PASSWORD
+          value: eB8hv3Ke5
+        - name: SQL_DBNAME
+          value: mydrivingDB
+        - name: SQL_SERVER
+          value: sqlserverlzn7863.database.windows.net
+        resources:
+          requests:
+            cpu: 100m
+            memory: 128Mi
+          limits:
+            cpu: 250m
+            memory: 256Mi
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: openhack-user-java
+  namespace: api-dev  
+spec:
+  type: LoadBalancer    
+  ports:
+  - port: 80
+  selector:
+    app: openhack-user-java
