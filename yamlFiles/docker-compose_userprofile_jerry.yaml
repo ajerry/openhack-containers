@@ -1,0 +1,49 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: userprofile
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: userprofile
+  template:
+    metadata:
+      labels:
+        app: userprofile
+    spec:
+      nodeSelector:
+        "beta.kubernetes.io/os": linux
+      containers:
+      - name: userprofile
+        image: registrylzn7863.azurecr.io/userprofile:1.0
+  
+        resources:
+          requests:
+            cpu: 100m
+            memory: 128Mi
+          limits:
+            cpu: 250m
+            memory: 256Mi
+        ports:
+        - containerPort: 80
+        env:
+          - name: SQL_SERVER
+            value: "sqlserverlzn7863.database.windows.net"
+          - name: SQL_PASSWORD
+            value: "eB8hv3Ke5"
+          - name: SQL_DBNAME
+            value: "mydrivingDB"
+          - name: SQL_USER
+            value: "sqladminlZn7863"
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: userprofile
+spec:
+  type: LoadBalancer
+  ports:
+  - port: 80
+  selector:
+    app: userprofile
