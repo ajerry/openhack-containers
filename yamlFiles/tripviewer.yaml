@@ -18,6 +18,7 @@ spec:
       containers:
       - name: tripviewer
         image: registrylzn7863.azurecr.io/tripviewer:1.0
+        
         resources:
           requests:
             cpu: 100m
