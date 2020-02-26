@@ -1,0 +1,50 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: trips
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: trips
+  template:
+    metadata:
+      labels:
+        app: trips
+    spec:
+      nodeSelector:
+        "beta.kubernetes.io/os": linux
+      containers:
+      - name: trips
+        image: registrylzn7863.azurecr.io/trips:1.0
+        resources:
+          requests:
+            cpu: 100m
+            memory: 128Mi
+          limits:
+            cpu: 250m
+            memory: 256Mi
+        ports:
+        - containerPort: 80
+        env:
+        - name: trips
+          value: "trips"
+        - name: "SQL_SERVER"
+          value: "sqlserverlzn7863.database.windows.net"
+        - name: "SQL_USER"
+          value: "sqladminlZn7863"
+        - name: "SQL_PASSWORD"
+          value: "eB8hv3Ke5"
+        - name: "SQL_DBNAME"
+          value: "mydrivingDB"
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: trips
+spec:
+  type: LoadBalancer
+  ports:
+  - port: 80
+  selector:
+    app: trips
