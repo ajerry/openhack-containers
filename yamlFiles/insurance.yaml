@@ -18,17 +18,17 @@ spec:
       - image: "registrylzn7863.azurecr.io/insurance:1.0"
         imagePullPolicy: Always
         name: insurance
+        ports:
+        - containerPort: 8081
+          name: http
+          protocol: TCP
         resources:
           requests:
             cpu: 100m
             memory: 128Mi
           limits:
             cpu: 250m
-            memory: 256Mi
-        ports:
-        - containerPort: 8081
-          name: http
-          protocol: TCP
+            memory: 256Mi  
 ---
 apiVersion: v1
 kind: Service
